@@ -38,7 +38,12 @@ first_party_sets.db-journal
 4️⃣ Subir Cambios a GitHub y Desplegar en Railway
 Cada que hagas una modificación en el código:
 
-Sube el cambio a GitHub
+Sube el cambio a GitHub directamente con
+---------------------------------------------------------------------------------
+git add .
+git commit -m "Actualización del bot con mejoras en modos, tonos y activación"
+git push
+---------------------------------------------------------------------------------
 
 powershell
 Copy
@@ -46,6 +51,7 @@ Edit
 git add .
 git commit -m "Descripción del cambio"
 git push
+
 Entra a Railway y redeployea el proyecto.
 ✅ Esto asegura que cualquier mejora o corrección se aplique correctamente.
 
@@ -71,3 +77,62 @@ Con esta documentación bien organizada, tendrás:
 ✅ Un sistema sólido para evitar que los errores dañen el proyecto.
 ✅ Un flujo de trabajo claro para que tú y tu equipo puedan hacer cambios sin estrés.
 ✅ Clientes satisfechos que recibirán instrucciones claras para usar su bot.
+------------------------------------------
+
+ERRORES COMUNES
+
+---------------------------------------
+
+Siempre que se elimine una sesión de whatsapp sin apagar el bot se debe 
+
+Remove-Item -Path .wwebjs_cache -Recurse -Force
+Remove-Item -Path session -Recurse -Force
+
+DEspues deploy en railway y por ultimo solicitar el QR nuevamente.
+
+Porque sino tira error
+Luego, en powershell para extraer el QR
+
+set LOGGING_LEVEL=DEBUG
+node bot.js
+
+Si ves un mensaje parecido a este todo está correcto:
+
+📲 Escanea este QR con tu WhatsApp para vincular el bot.
+🟡 Variable de entorno 'MODE': BASICO
+✅ 🦆 ¡Bot conectado en modo BASICO!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

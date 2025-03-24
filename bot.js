@@ -5,6 +5,7 @@ const fs = require('fs');
 // Modo de Mantenimiento
 if (process.env.MAINTENANCE_MODE === 'ON') {
     console.log('🚧 El bot está en mantenimiento temporalmente. 🛠️');
+    console.log('🔒 Finalizando el proceso para evitar que el bot se ejecute.');
     process.exit(0);
 }
 
@@ -12,14 +13,24 @@ if (process.env.MAINTENANCE_MODE === 'ON') {
 const client = new Client({
     puppeteer: {
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process',
+            '--disable-gpu'
+        ],
+        executablePath: require('puppeteer').executablePath()
     },
     authStrategy: new LocalAuth({ dataPath: process.env.SESSION_PATH || './session' })
 });
 
 console.log('✅ Puppeteer configurado correctamente.');
 
-// Generación del QR
+// QR Code
 client.on('qr', qr => {
     qrcode.generate(qr, { small: true });
     console.log('📲 Escanea este QR con tu WhatsApp para vincular el bot.');
@@ -29,12 +40,10 @@ client.on('qr', qr => {
 client.on('ready', async () => {
     const modo = (process.env.MODE || 'BASICO').trim().toUpperCase();
     console.log(`🟡 Variable de entorno 'MODE': ${modo}`);
-    console.log(`✅ 🦆 ¡Bot conectado en modo ${modo}!`);
-});
 
-// Variables para guardar configuración
-tipoDeModo = "BASICO";
-tipoDeTono = "FRIENDLY";
+    let emoji = modo === 'PRO' ? '❤️' : modo === 'LEGENDARIO' ? '💜' : '🦆';
+    console.log(`✅ ${emoji} ¡Bot conectado en modo ${modo}!`);
+});
 
 // Manejo de Mensajes
 client.on('message', async (message) => {
@@ -42,41 +51,36 @@ client.on('message', async (message) => {
         return message.reply('⚠️ El bot está en mantenimiento temporalmente. Vuelve pronto. 🚧');
     }
 
-    const texto = message.body.toUpperCase();
+    const texto = message.body.toLowerCase().trim();
 
-    if (texto.includes('ACTIVARBOT')) {
-        message.reply(`🎯 Hola, gracias por activar el bot. Para configurarme escribe algo así:
-➡️ *MODOBASICO* o *MODOLEGENDARIO*
-➡️ *TONOFRIENDLY* o *TONOPROFESSIONAL*
-¡Y listo! El equipo de Plenty 💜`);
-        return;
+    // Mensaje de Bienvenida
+    if (texto === 'activarbot') {
+        return message.reply(`🎯 Hola, gracias por activar el bot. Ahora puedes configurar:
+
+🟠 *Modo:*
+ - BASICO: Respuestas generales.
+ - PRO: Mensajes más amplios e informativos.
+ - LEGENDARIO: Respuestas motivadoras y llenas de energía.
+
+🟢 *Tono:*
+ - FRIENDLY: Cercano y cálido.
+ - PROFESSIONAL: Serio y directo.
+ - EMOTIONAL: Con un toque sentimental.
+
+✍️ Escribe: _CONFIGURAR MODO [BASICO/PRO/LEGENDARIO]_ y _CONFIGURAR TONO [FRIENDLY/PROFESSIONAL/EMOTIONAL]_
+
+💜 El equipo de Plenty`);
     }
 
-    if (texto.includes('MODO')) {
-        if (texto.includes('MODOBASICO')) tipoDeModo = "BASICO";
-        else if (texto.includes('MODOPRO')) tipoDeModo = "PRO";
-        else if (texto.includes('MODOLEGENDARIO')) tipoDeModo = "LEGENDARIO";
-        else message.reply('⚠️ Modo no reconocido. Escribe: *MODOBASICO*, *MODOPRO* o *MODOLEGENDARIO*.');
+    // Detección directa de palabras clave
+    if (['basico', 'pro', 'legendario'].includes(texto)) {
+        return message.reply(`✅ ¡Modo *${texto.toUpperCase()}* activado correctamente!`);
     }
 
-    if (texto.includes('TONO')) {
-        if (texto.includes('TONOFRIENDLY')) tipoDeTono = "FRIENDLY";
-        else if (texto.includes('TONOPROFESSIONAL')) tipoDeTono = "PROFESSIONAL";
-        else if (texto.includes('TONOEMOTIONAL')) tipoDeTono = "EMOTIONAL";
-        else message.reply('⚠️ Tono no reconocido. Escribe: *TONOFRIENDLY*, *TONOPROFESSIONAL* o *TONOEMOTIONAL*.');
-    }
-
-    if (texto.includes('MODO') || texto.includes('TONO')) {
-        message.reply(`✅ *Configuración exitosa:*
-🔥 **Modo:** ${tipoDeModo}
-🎵 **Tono:** ${tipoDeTono}
-Ahora puedes interactuar libremente. 😊`);
-    }
-
-    // Respuestas a triggers básicos
-    if (texto.includes('PRECIO')) {
+    // Triggers
+    if (texto.includes('precio')) {
         message.reply('El precio de LA PLENTY KIT es $90.000 COP e incluye envío gratis. 🚀💜');
-    } else if (texto.includes('INFORMACIÓN')) {
+    } else if (texto.includes('información')) {
         const botones = new Buttons(
             '¿Quieres más información detallada o cómo adquirirlo?',
             [
@@ -88,8 +92,10 @@ Ahora puedes interactuar libremente. 😊`);
             'Elige una opción:'
         );
         await message.reply(botones);
-    } else if (texto.includes('COMPRAR') || texto.includes('ADQUIRIR')) {
+    } else if (texto.includes('comprar') || texto.includes('adquirir')) {
         message.reply('Puedes adquirir tu PLENTY KIT visitando el sitio web: cursos.goplenty.net 🌐');
+    } else if (texto.includes('humano') || texto.includes('asesor')) {
+        message.reply('Ahora te voy a transferir con un humano para que te ayude mejor. Tranquilo, esta persona sabe todo lo que necesitas saber. 😎');
     } else {
         message.reply('¿En qué más puedo ayudarte? 😊');
     }
@@ -98,6 +104,7 @@ Ahora puedes interactuar libremente. 😊`);
 // Reconexión Automática
 client.on('disconnected', async (reason) => {
     console.log(`❗ Bot desconectado. Motivo: ${reason}. Intentando reconectar en 10 segundos...`);
+
     setTimeout(() => {
         client.initialize().catch(err => {
             console.error('❌ Error al reiniciar el bot:', err);

@@ -62,7 +62,7 @@ client.on('message', async (message) => {
     } else if (texto.includes('humano')) {
         message.reply('Ahora te voy a transferir con un humano para que te ayude mejor. Tranquilo, esta persona sabe todo lo que necesitas saber. 😎');
     } else {
-        if (modo === 'LEGENDARIO') {
+        if (modo.trim().toUpperCase() === 'LEGENDARIO') {
             message.reply('🤩 Esa es una gran pregunta. ¿Qué tal si te explico más sobre cómo **LA PLENTY KIT** puede ayudar a tus hijos a desarrollar habilidades sorprendentes?');
         } else {
             message.reply('¿En qué más puedo ayudarte? 😊');

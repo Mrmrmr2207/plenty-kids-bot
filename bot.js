@@ -42,14 +42,7 @@ client.on('ready', async () => {
     console.log(`🟡 Variable de entorno 'MODE': ${modo}`);
 
     let emoji = modo === 'PRO' ? '❤️' : modo === 'LEGENDARIO' ? '💜' : '🦆';
-
     console.log(`✅ ${emoji} ¡Bot conectado en modo ${modo}!`);
-
-    // Mensaje de Confirmación solo si hay un número configurado
-    const phoneNumber = process.env.PHONE_NUMBER;
-    if (phoneNumber) {
-        await client.sendMessage(phoneNumber, `✅ ${emoji} ¡El BOT ha sido ENCENDIDO en modo ${modo}!`);
-    }
 });
 
 // Manejo de Mensajes
@@ -60,16 +53,6 @@ client.on('message', async (message) => {
 
     const texto = message.body.toLowerCase();
     const modo = (process.env.MODE || 'BASICO').trim().toUpperCase();
-
-    if (texto.includes('santipiernero')) {
-        await message.reply(`🔧 ¿Qué tono quieres usar?
-1️⃣ Formal 🧐
-2️⃣ Amistoso 😎
-3️⃣ Gracioso 😂
-
-Escribe el número de tu elección.`);
-        return;
-    }
 
     if (texto.includes('precio')) {
         message.reply('El precio de LA PLENTY KIT es $90.000 COP e incluye envío gratis. 🚀💜');
@@ -99,7 +82,7 @@ Escribe el número de tu elección.`);
 // Reconexión Automática
 client.on('disconnected', async (reason) => {
     console.log(`❗ Bot desconectado. Motivo: ${reason}. Intentando reconectar en 10 segundos...`);
-    
+
     setTimeout(() => {
         client.initialize().catch(err => {
             console.error('❌ Error al reiniciar el bot:', err);

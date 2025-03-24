@@ -1,0 +1,19 @@
+[0323/231543.089:WARNING:sqlite_persistent_store_backend_base.cc(181)] Cookie database is too new.
+[0323/231543.094:ERROR:backend_impl.cc(1423)] Unable to map Index file
+[0323/231543.907:INFO:CONSOLE(0)] "Error with Permissions-Policy header: Feature xr-spatial-tracking's parameters are ignored.", source:  (0)
+[0323/231543.907:INFO:CONSOLE(0)] "Error with Permissions-Policy header: Origin trial controlled feature not enabled: 'attribution-reporting'.", source:  (0)
+[0323/231543.907:INFO:CONSOLE(0)] "Error with Permissions-Policy header: Unrecognized feature: 'compute-pressure'.", source:  (0)
+[0323/231543.907:INFO:CONSOLE(0)] "Error with Permissions-Policy header: Origin trial controlled feature not enabled: 'interest-cohort'.", source:  (0)
+[0323/231543.907:INFO:CONSOLE(0)] "Error with Permissions-Policy header: Unrecognized feature: 'private-state-token-issuance'.", source:  (0)
+[0323/231543.907:INFO:CONSOLE(0)] "Error with Permissions-Policy header: Origin trial controlled feature not enabled: 'shared-storage'.", source:  (0)
+[0323/231543.907:INFO:CONSOLE(0)] "Error with Permissions-Policy header: Unrecognized feature: 'shared-storage-select-url'.", source:  (0)
+[0323/231543.907:INFO:CONSOLE(0)] "Error with Permissions-Policy header: Unrecognized feature: 'private-state-token-redemption'.", source:  (0)
+[0323/231543.908:INFO:CONSOLE(0)] "Error with Permissions-Policy header: Origin trial controlled feature not enabled: 'unload'.", source:  (0)
+[0323/231543.908:INFO:CONSOLE(0)] "Error with Permissions-Policy header: Unrecognized feature: 'window-management'.", source:  (0)
+[0323/231543.908:ERROR:back_forward_cache_impl.cc(657)] BackForwardCacheImpl::GetCurrentBackForwardCacheEligibility: about:blank : No: BackForwardCache disabled, HTTP status is not OK, scheme is not HTTP or HTTPS, BackForwardCache is not supported by delegate, main RenderFrameHost doesn't have response headers set, probably due not having successfully committed a navigation.
+[0323/231550.128:INFO:CONSOLE(157)] "Event handler of 'x-storagemutated-1' event must be added on the initial evaluation of worker script.", source: https://static.whatsapp.net/rsrc.php/v4/yd/r/uvGLqTcUnbs.js (157)
+[0323/231817.113:INFO:CONSOLE(157)] "Event handler of 'x-storagemutated-1' event must be added on the initial evaluation of worker script.", source: https://static.whatsapp.net/rsrc.php/v4/yd/r/uvGLqTcUnbs.js (157)
+[0323/232107.600:INFO:CONSOLE(1756)] "Failed to parse video contentType: video/mp4; codecs=avc1.42000a", source: https://static.whatsapp.net/rsrc.php/v4igVN4/y3/l/rt/M-zjXlR7hKx.js (1756)
+[0323/232107.600:INFO:CONSOLE(1756)] "Failed to parse video contentType: video/mp4; codecs=hev1.1.6.L93.B0", source: https://static.whatsapp.net/rsrc.php/v4igVN4/y3/l/rt/M-zjXlR7hKx.js (1756)
+[0323/232152.151:INFO:CONSOLE(157)] "Event handler of 'x-storagemutated-1' event must be added on the initial evaluation of worker script.", source: https://static.whatsapp.net/rsrc.php/v4/yd/r/uvGLqTcUnbs.js (157)
+[0323/232453.208:INFO:CONSOLE(157)] "Event handler of 'x-storagemutated-1' event must be added on the initial evaluation of worker script.", source: https://static.whatsapp.net/rsrc.php/v4/yd/r/uvGLqTcUnbs.js (157)

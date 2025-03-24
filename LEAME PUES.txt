@@ -1,0 +1,73 @@
+🚀 Guía para el Arranque y Gestión del Bot
+1️⃣ Preparación Inicial
+🔹 Instala Node.js y Puppeteer correctamente.
+🔹 Asegúrate de tener tu entorno de Railway configurado.
+🔹 Clona el repositorio de GitHub actualizado.
+🔹 Configura las variables de entorno en Railway.
+
+2️⃣ Iniciar el Bot Correctamente
+Abre PowerShell y ejecuta:
+
+powershell
+Copy
+Edit
+set LOGGING_LEVEL=DEBUG
+node bot.js
+Escanea el QR y espera la confirmación del mensaje:
+✅ ¡Bot conectado en modo BASICO/PRO/LEGENDARIO!
+
+3️⃣ Procedimiento para Eliminar Errores Comunes
+Si el bot NO INICIA o aparece un error tipo EBUSY, sigue estos pasos:
+
+🔹 Cierra PowerShell
+🔹 Elimina la carpeta de sesión (/session).
+🔹 Elimina la caché con este comando en PowerShell:
+
+powershell
+Copy
+Edit
+Remove-Item -Path .wwebjs_cache -Recurse -Force
+🔹 Verifica en el Explorador de Archivos que no haya archivos bloqueados como:
+
+lockfile
+
+first_party_sets.db-journal
+
+🔹 Si el problema persiste, reinicia el computador y vuelve a intentar.
+
+4️⃣ Subir Cambios a GitHub y Desplegar en Railway
+Cada que hagas una modificación en el código:
+
+Sube el cambio a GitHub
+
+powershell
+Copy
+Edit
+git add .
+git commit -m "Descripción del cambio"
+git push
+Entra a Railway y redeployea el proyecto.
+✅ Esto asegura que cualquier mejora o corrección se aplique correctamente.
+
+5️⃣ Configuración del Bot
+🔹 Al conectar el bot, enviará un mensaje automático que te pedirá configurar:
+
+✅ Modo: BASICO, PRO, LEGENDARIO
+✅ Tono: FRIENDLY, PROFESSIONAL, EMOTIONAL
+✅ Palabra de seguridad: ACTIVARBOT
+
+6️⃣ Instrucciones para el Cliente (Usuarios Finales)
+Voy a crear también una sección clara para los odontólogos, barberos u otros clientes que usen el bot, con estos temas:
+
+🔹 Cómo interactuar con el bot.
+🔹 Qué palabras usar para obtener información.
+🔹 Cómo activar configuraciones especiales.
+🔹 Cómo identificar que el bot está en mantenimiento o inactivo.
+
+🔥 Resultado Final
+Con esta documentación bien organizada, tendrás:
+
+✅ Un bot fácil de encender y gestionar.
+✅ Un sistema sólido para evitar que los errores dañen el proyecto.
+✅ Un flujo de trabajo claro para que tú y tu equipo puedan hacer cambios sin estrés.
+✅ Clientes satisfechos que recibirán instrucciones claras para usar su bot.

@@ -1,3 +1,2 @@
-2025/03/24-17:04:48.004 4028 Reusing MANIFEST C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\shared_proto_db/MANIFEST-000001
-2025/03/24-17:04:48.004 4028 Recovering log #3
-2025/03/24-17:04:48.004 4028 Reusing old log C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\shared_proto_db/000003.log 
+2025/03/24-17:38:54.921 c08 Creating DB C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\shared_proto_db since it was missing.
+2025/03/24-17:38:54.929 c08 Reusing MANIFEST C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\shared_proto_db/MANIFEST-000001

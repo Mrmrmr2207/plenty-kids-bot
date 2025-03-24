@@ -34,7 +34,7 @@ client.on('qr', qr => {
 });
 
 client.on('ready', () => {
-    const modo = (process.env.MODE || 'BASICO').trim().toUpperCase();
+    const modo = (process.env.mode || process.env.MODE || 'BASICO').trim().toUpperCase();
     console.log(`🟡 Variable de entorno 'MODE': ${modo}`);
 
     let emoji = '🦆';
@@ -55,7 +55,7 @@ client.on('message', async (message) => {
     }
 
     const texto = message.body.toLowerCase();
-    const modo = (process.env.MODE || 'BASICO').trim().toUpperCase();
+    const modo = (process.env.mode || process.env.MODE || 'BASICO').trim().toUpperCase();
 
     if (texto.includes('santipiernero')) {
         await message.reply(`🔧 ¿Qué tono quieres usar?

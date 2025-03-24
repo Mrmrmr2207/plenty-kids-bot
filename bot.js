@@ -30,6 +30,10 @@ const client = new Client({
 
 console.log('✅ Puppeteer configurado correctamente.');
 
+// Variables para Modo y Tono
+let modoSeleccionado = 'BASICO';
+let tonoSeleccionado = 'FRIENDLY';
+
 // QR Code
 client.on('qr', qr => {
     qrcode.generate(qr, { small: true });
@@ -38,11 +42,7 @@ client.on('qr', qr => {
 
 // Conexión Exitosa
 client.on('ready', async () => {
-    const modo = (process.env.MODE || 'BASICO').trim().toUpperCase();
-    console.log(`🟡 Variable de entorno 'MODE': ${modo}`);
-
-    let emoji = modo === 'PRO' ? '❤️' : modo === 'LEGENDARIO' ? '💜' : '🦆';
-    console.log(`✅ ${emoji} ¡Bot conectado en modo ${modo}!`);
+    console.log(`✅ 🦆 ¡Bot conectado en modo ${modoSeleccionado}!`);
 });
 
 // Manejo de Mensajes
@@ -51,11 +51,11 @@ client.on('message', async (message) => {
         return message.reply('⚠️ El bot está en mantenimiento temporalmente. Vuelve pronto. 🚧');
     }
 
-    const texto = message.body.toLowerCase().trim();
+    const texto = message.body.toUpperCase().trim();
 
-    // Mensaje de Bienvenida
-    if (texto === 'activarbot') {
-        return message.reply(`🎯 Hola, gracias por activar el bot. Ahora puedes configurar:
+    // Activar Bot
+    if (texto === 'ACTIVARBOT') {
+        await message.reply(`🎯 Hola, gracias por activar el bot. Ahora puedes configurar:
 
 🟠 *Modo:*
  - BASICO: Respuestas generales.
@@ -70,17 +70,37 @@ client.on('message', async (message) => {
 ✍️ Escribe: _CONFIGURAR MODO [BASICO/PRO/LEGENDARIO]_ y _CONFIGURAR TONO [FRIENDLY/PROFESSIONAL/EMOTIONAL]_
 
 💜 El equipo de Plenty`);
+        return;
     }
 
-    // Detección directa de palabras clave
-    if (['basico', 'pro', 'legendario'].includes(texto)) {
-        return message.reply(`✅ ¡Modo *${texto.toUpperCase()}* activado correctamente!`);
+    // Configurar Modo
+    if (texto.startsWith('CONFIGURAR MODO')) {
+        const nuevoModo = texto.split(' ')[2];
+        if (['BASICO', 'PRO', 'LEGENDARIO'].includes(nuevoModo)) {
+            modoSeleccionado = nuevoModo;
+            await message.reply(`✅ El modo ha sido configurado en *${modoSeleccionado}*.`);
+        } else {
+            await message.reply('❌ Modo no reconocido. Usa BASICO, PRO o LEGENDARIO.');
+        }
+        return;
     }
 
-    // Triggers
-    if (texto.includes('precio')) {
+    // Configurar Tono
+    if (texto.startsWith('CONFIGURAR TONO')) {
+        const nuevoTono = texto.split(' ')[2];
+        if (['FRIENDLY', 'PROFESSIONAL', 'EMOTIONAL'].includes(nuevoTono)) {
+            tonoSeleccionado = nuevoTono;
+            await message.reply(`✅ El tono ha sido configurado en *${tonoSeleccionado}*.`);
+        } else {
+            await message.reply('❌ Tono no reconocido. Usa FRIENDLY, PROFESSIONAL o EMOTIONAL.');
+        }
+        return;
+    }
+
+    // Triggers conocidos
+    if (texto.includes('PRECIO')) {
         message.reply('El precio de LA PLENTY KIT es $90.000 COP e incluye envío gratis. 🚀💜');
-    } else if (texto.includes('información')) {
+    } else if (texto.includes('INFORMACIÓN') || texto.includes('INFO')) {
         const botones = new Buttons(
             '¿Quieres más información detallada o cómo adquirirlo?',
             [
@@ -92,9 +112,9 @@ client.on('message', async (message) => {
             'Elige una opción:'
         );
         await message.reply(botones);
-    } else if (texto.includes('comprar') || texto.includes('adquirir')) {
+    } else if (texto.includes('COMPRAR') || texto.includes('ADQUIRIR')) {
         message.reply('Puedes adquirir tu PLENTY KIT visitando el sitio web: cursos.goplenty.net 🌐');
-    } else if (texto.includes('humano') || texto.includes('asesor')) {
+    } else if (texto.includes('HUMANO')) {
         message.reply('Ahora te voy a transferir con un humano para que te ayude mejor. Tranquilo, esta persona sabe todo lo que necesitas saber. 😎');
     } else {
         message.reply('¿En qué más puedo ayudarte? 😊');
@@ -104,7 +124,6 @@ client.on('message', async (message) => {
 // Reconexión Automática
 client.on('disconnected', async (reason) => {
     console.log(`❗ Bot desconectado. Motivo: ${reason}. Intentando reconectar en 10 segundos...`);
-
     setTimeout(() => {
         client.initialize().catch(err => {
             console.error('❌ Error al reiniciar el bot:', err);

@@ -83,15 +83,26 @@ ERRORES COMUNES
 
 ---------------------------------------
 
-Siempre que se elimine una sesión de whatsapp sin apagar el bot se debe 
+OJO Siempre que se elimine una sesión de whatsapp sin apagar el bot se debe 
+
+Copia y pega en powershell:
 
 Remove-Item -Path .wwebjs_cache -Recurse -Force
 Remove-Item -Path session -Recurse -Force
 
-DEspues deploy en railway y por ultimo solicitar el QR nuevamente.
+DEspues, push en GitHub 
+
+git add .
+git commit -m "Configuración mejorada de modo, tono y seguridad"
+git push
+
+Ahora deploy en railway y por ultimo solicitar el QR nuevamente.
 
 Porque sino tira error
+
 Luego, en powershell para extraer el QR
+
+Copia y pega:
 
 set LOGGING_LEVEL=DEBUG
 node bot.js

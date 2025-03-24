@@ -1,3 +1,2 @@
-2025/03/24-00:25:09.301 276c Reusing MANIFEST C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\Service Worker\Database/MANIFEST-000001
-2025/03/24-00:25:09.302 276c Recovering log #3
-2025/03/24-00:25:09.302 276c Reusing old log C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\Service Worker\Database/000003.log 
+2025/03/24-16:46:45.446 2364 Creating DB C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\Service Worker\Database since it was missing.
+2025/03/24-16:46:45.454 2364 Reusing MANIFEST C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\Service Worker\Database/MANIFEST-000001

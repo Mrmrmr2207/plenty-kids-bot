@@ -1,6 +1,2 @@
-2025/03/24-00:25:09.293 19c0 Reusing MANIFEST C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\Local Storage\leveldb/MANIFEST-000001
-2025/03/24-00:25:09.294 19c0 Recovering log #6
-2025/03/24-00:25:09.294 19c0 Reusing old log C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\Local Storage\leveldb/000006.log 
-2025/03/24-00:27:10.178 19c0 Level-0 table #10: started
-2025/03/24-00:27:10.181 19c0 Level-0 table #10: 17386 bytes OK
-2025/03/24-00:27:10.183 19c0 Delete type=0 #6
+2025/03/24-16:46:40.083 5114 Creating DB C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\Local Storage\leveldb since it was missing.
+2025/03/24-16:46:40.123 5114 Reusing MANIFEST C:\Users\DavidGoM\Downloads\chatbot-folder\session\session\Default\Local Storage\leveldb/MANIFEST-000001

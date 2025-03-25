@@ -51,6 +51,13 @@ client.on('ready', async () => {
 client.on('message', async (message) => {
     if (process.env.MAINTENANCE_MODE === 'ON') {
         return message.reply('⚠️ El bot está en mantenimiento temporalmente. Vuelve pronto. 🚧');
+        const { MessageMedia } = require('whatsapp-web.js'); // Importar para manejar audios
+
+        // Dentro del evento de mensaje:
+        if (texto.includes('hola')) {
+            const saludoAudio = MessageMedia.fromFilePath('./audios/saludo_hola.mp3');
+            await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
+        }        
     }
 
     const texto = message.body.toUpperCase();

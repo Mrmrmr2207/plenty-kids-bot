@@ -22,8 +22,6 @@ const client = new Client({
     authStrategy: new LocalAuth({ dataPath: './session' })
 });
 
-console.log('✅ Puppeteer configurado correctamente.');
-
 // Variables de estado
 let configurado = false;
 
@@ -36,6 +34,17 @@ client.on('qr', qr => {
 // Conexión Exitosa
 client.on('ready', async () => {
     console.log(`✅ 🦆 ¡Bot conectado en modo BASICO!`);
+
+    // Enviar la nota de voz automáticamente al iniciar
+    const saludoPath = path.join(__dirname, 'audios', 'saludo_hola.mp3');
+    if (fs.existsSync(saludoPath)) {
+        const saludoAudio = MessageMedia.fromFilePath(saludoPath);
+        const adminNumber = '521XXXXXXXXXX@c.us';  // Cambia por tu número de prueba
+        await client.sendMessage(adminNumber, saludoAudio, { sendAudioAsVoice: true });
+        console.log("🎤 Nota de voz enviada automáticamente al administrador.");
+    } else {
+        console.warn("⚠️ No se encontró el archivo de saludo.");
+    }
 });
 
 // Manejo de Mensajes
@@ -72,6 +81,20 @@ client.on('message', async (message) => {
     }
 });
 
+// **Gestión de errores inteligente**
+client.on('error', (err) => {
+    console.error('❌ Error detectado:', err);
+
+    if (err.message.includes('Execution context was destroyed')) {
+        console.log('🔄 Intentando reiniciar automáticamente...');
+        setTimeout(() => {
+            client.initialize().catch(err => {
+                console.error('❌ Error al reiniciar el bot:', err);
+            });
+        }, 10000);
+    }
+});
+
 // Reconexión Automática
 client.on('disconnected', async (reason) => {
     console.log(`❗ Bot desconectado. Motivo: ${reason}. Intentando reconectar en 10 segundos...`);
@@ -86,4 +109,5 @@ client.on('disconnected', async (reason) => {
 client.initialize().catch(err => {
     console.error('❌ Error al inicializar el cliente:', err);
 });
+
 

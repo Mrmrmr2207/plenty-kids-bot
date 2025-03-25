@@ -53,14 +53,29 @@ client.on('message', async (message) => {
 
     // 🎯 Saludo en Audio
     if (texto.includes('HOLA')) {
-        const saludoPath = path.join(__dirname, 'audios', 'saludo_hola.mp3');
+        const formatos = ['mp3', 'ogg', 'opus'];
+        let audioEnviado = false;
 
-        if (fs.existsSync(saludoPath)) {
-            const saludoAudio = MessageMedia.fromFilePath(saludoPath);
-            await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
-        } else {
+        for (const formato of formatos) {
+            const saludoPath = path.join(__dirname, 'audios', `saludo_hola.${formato}`);
+            console.log(`🔎 Intentando enviar el audio: ${saludoPath}`);
+
+            if (fs.existsSync(saludoPath)) {
+                try {
+                    const saludoAudio = MessageMedia.fromFilePath(saludoPath);
+                    await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
+                    audioEnviado = true;
+                    break; // Detiene el ciclo si el audio fue enviado exitosamente
+                } catch (error) {
+                    console.error(`❌ Error al enviar el audio ${formato}:`, error);
+                }
+            }
+        }
+
+        if (!audioEnviado) {
             await message.reply("🎧 Lo siento, pero el audio de saludo no está disponible en este momento.");
         }
+
         return;
     }
 
@@ -86,3 +101,4 @@ client.on('disconnected', async (reason) => {
 client.initialize().catch(err => {
     console.error('❌ Error al inicializar el cliente:', err);
 });
+

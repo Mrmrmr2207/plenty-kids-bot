@@ -77,34 +77,41 @@ client.on('message', async (message) => {
     if (!configurado) return message.reply("🔒 El bot está bloqueado. Usa la palabra de seguridad 'ACTIVARBOT' para comenzar.");
 
     // 🎯 Saludo en Audio
-    if (texto.includes('HOLA')) {
-        const formatos = ['saludo_hola.mp3', 'saludo_hola.ogg', 'saludo_hola.opus'];
-        let audioEnviado = false;
+if (texto.includes('HOLA')) {
+    const path = require('path');
 
-        for (const formato of formatos) {
-            const saludoPath = path.join(__dirname, 'audios', formato);
-            console.log('🔎 Intentando enviar el audio:', saludoPath);
+    // Intentar con múltiples formatos
+    const formatos = ['saludo_hola_plenty.mp3', 'saludo_hola_plenty.ogg', 'saludo_hola_plenty.opus'];
 
-            if (fs.existsSync(saludoPath)) {
-                const saludoAudio = MessageMedia.fromFilePath(saludoPath);
-                await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
-                audioEnviado = true;
-                break; 
-            }
+    let audioEnviado = false;
+
+    for (const formato of formatos) {
+        const saludoPath = path.join(__dirname, 'audios', formato);
+        console.log('🔎 Intentando enviar el audio:', saludoPath);
+
+        if (fs.existsSync(saludoPath)) {
+            const saludoAudio = MessageMedia.fromFilePath(saludoPath);
+            await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
+            audioEnviado = true;
+            break; // Detiene el ciclo si se envía con éxito
         }
-
-        if (!audioEnviado) {
-            const saludoAudioUrl = 'https://drive.google.com/uc?export=download&id=12YhRNY7bftezDVCin6ylXINTDe9D-OOi';
-            try {
-                const saludoAudio = await MessageMedia.fromUrl(saludoAudioUrl);
-                await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
-            } catch (error) {
-                console.error('❌ Error al enviar el audio desde el enlace:', error);
-                await message.reply("🔊 Lo siento, el audio no está disponible en este momento.");
-            }
-        }
-        return;
     }
+
+    // Si no encontró el audio localmente, intenta enviar desde un enlace directo
+    if (!audioEnviado) {
+        const saludoAudioUrl = 'https://drive.google.com/uc?export=download&id=12YhRNY7bftezDVCin6ylXINTDe9D-OOi';
+    
+        try {
+            const saludoAudio = await MessageMedia.fromUrl(saludoAudioUrl, { unsafeMime: true });
+            await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
+        } catch (error) {
+            console.error('❌ Error al enviar el audio desde el enlace:', error);
+            await message.reply("🔊 Lo siento, el audio no está disponible en este momento.");
+        }
+    }
+
+    return;
+}
 
     // Configuración de Modo
     if (texto.includes('CONFIGURAR MODO')) {

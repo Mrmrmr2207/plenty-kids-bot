@@ -30,6 +30,10 @@ const client = new Client({
 
 console.log('✅ Puppeteer configurado correctamente.');
 
+// Configuración por defecto
+const modo = 'PRO';         // Establece el modo por defecto
+const tono = 'FRIENDLY';    // Establece el tono por defecto
+
 // QR Code
 client.on('qr', qr => {
     qrcode.generate(qr, { small: true });

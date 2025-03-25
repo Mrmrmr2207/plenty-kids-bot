@@ -1,11 +1,11 @@
 const { Client, Buttons, MessageMedia, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
+const path = require('path');
 
 // Modo de Mantenimiento
 if (process.env.MAINTENANCE_MODE === 'ON') {
     console.log('🚧 El bot está en mantenimiento temporalmente. 🛠️');
-    console.log('🔒 Finalizando el proceso para evitar que el bot se ejecute.');
     process.exit(0);
 }
 
@@ -70,22 +70,38 @@ client.on('message', async (message) => {
  - PROFESSIONAL: Serio y directo.
  - EMOTIONAL: Con un toque sentimental.
 
-Escribe: *CONFIGURAR MODO [BASICO/PRO/LEGENDARIO]* y *CONFIGURAR TONO [FRIENDLY/PROFESSIONAL/EMOTIONAL]*
-
 💜 El equipo de Plenty`);
         return;
     }
 
     if (!configurado) return message.reply("🔒 El bot está bloqueado. Usa la palabra de seguridad 'ACTIVARBOT' para comenzar.");
 
-    // 🔊 Saludo en Audio
+    // 🎯 Saludo en Audio
     if (texto.includes('HOLA')) {
-        const saludoPath = './audios/saludo_hola.mp3';
-        if (fs.existsSync(saludoPath)) {
-            const saludoAudio = MessageMedia.fromFilePath(saludoPath);
-            await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
-        } else {
-            message.reply("🎧 Lo siento, pero el audio de saludo no está disponible en este momento.");
+        const formatos = ['saludo_hola.mp3', 'saludo_hola.ogg', 'saludo_hola.opus'];
+        let audioEnviado = false;
+
+        for (const formato of formatos) {
+            const saludoPath = path.join(__dirname, 'audios', formato);
+            console.log('🔎 Intentando enviar el audio:', saludoPath);
+
+            if (fs.existsSync(saludoPath)) {
+                const saludoAudio = MessageMedia.fromFilePath(saludoPath);
+                await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
+                audioEnviado = true;
+                break; 
+            }
+        }
+
+        if (!audioEnviado) {
+            const saludoAudioUrl = 'https://drive.google.com/uc?export=download&id=12YhRNY7bftezDVCin6ylXINTDe9D-OOi';
+            try {
+                const saludoAudio = await MessageMedia.fromUrl(saludoAudioUrl);
+                await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
+            } catch (error) {
+                console.error('❌ Error al enviar el audio desde el enlace:', error);
+                await message.reply("🔊 Lo siento, el audio no está disponible en este momento.");
+            }
         }
         return;
     }
@@ -102,35 +118,9 @@ Escribe: *CONFIGURAR MODO [BASICO/PRO/LEGENDARIO]* y *CONFIGURAR TONO [FRIENDLY/
         return;
     }
 
-    // Configuración de Tono
-    if (texto.includes('CONFIGURAR TONO')) {
-        const nuevoTono = texto.split('CONFIGURAR TONO ')[1];
-        if (['FRIENDLY', 'PROFESSIONAL', 'EMOTIONAL'].includes(nuevoTono)) {
-            tono = nuevoTono;
-            await message.reply(`✅ Tono configurado exitosamente a: *${tono}*`);
-        } else {
-            await message.reply('❌ Tono no reconocido. Usa FRIENDLY, PROFESSIONAL o EMOTIONAL.');
-        }
-        return;
-    }
-
     // Respuestas Generales
     if (texto.includes('PRECIO')) {
         message.reply('El precio de LA PLENTY KIT es $90.000 COP e incluye envío gratis. 🚀💜');
-    } else if (texto.includes('INFORMACION') || texto.includes('INFORMACIÓN')) {
-        const botones = new Buttons(
-            '¿Quieres más información detallada o cómo adquirirlo?',
-            [
-                { body: '💡 Más Información' },
-                { body: '🛒 Cómo Comprar' },
-                { body: '📞 Hablar con un Humano' }
-            ],
-            '¿En qué te puedo ayudar?',
-            'Elige una opción:'
-        );
-        await message.reply(botones);
-    } else if (texto.includes('COMPRAR') || texto.includes('ADQUIRIR')) {
-        message.reply('Puedes adquirir tu PLENTY KIT visitando el sitio web: cursos.goplenty.net 🌐');
     } else {
         message.reply('¿En qué más puedo ayudarte? 😊');
     }
@@ -139,7 +129,6 @@ Escribe: *CONFIGURAR MODO [BASICO/PRO/LEGENDARIO]* y *CONFIGURAR TONO [FRIENDLY/
 // Reconexión Automática
 client.on('disconnected', async (reason) => {
     console.log(`❗ Bot desconectado. Motivo: ${reason}. Intentando reconectar en 10 segundos...`);
-
     setTimeout(() => {
         client.initialize().catch(err => {
             console.error('❌ Error al reiniciar el bot:', err);

@@ -51,13 +51,6 @@ client.on('ready', async () => {
 client.on('message', async (message) => {
     if (process.env.MAINTENANCE_MODE === 'ON') {
         return message.reply('⚠️ El bot está en mantenimiento temporalmente. Vuelve pronto. 🚧');
-        const { MessageMedia } = require('whatsapp-web.js'); // Importar para manejar audios
-
-        // Dentro del evento de mensaje:
-        if (texto.includes('hola')) {
-            const saludoAudio = MessageMedia.fromFilePath('./audios/saludo_hola.mp3');
-            await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
-        }        
     }
 
     const texto = message.body.toUpperCase();
@@ -77,11 +70,25 @@ client.on('message', async (message) => {
  - PROFESSIONAL: Serio y directo.
  - EMOTIONAL: Con un toque sentimental.
 
-Escribe: *CONFIGURAR MODO [BASICO/PRO/LEGENDARIO]* y *CONFIGURAR TONO [FRIENDLY/PROFESSIONAL/EMOTIONAL]*`);
+Escribe: *CONFIGURAR MODO [BASICO/PRO/LEGENDARIO]* y *CONFIGURAR TONO [FRIENDLY/PROFESSIONAL/EMOTIONAL]*
+
+💜 El equipo de Plenty`);
         return;
     }
 
     if (!configurado) return message.reply("🔒 El bot está bloqueado. Usa la palabra de seguridad 'ACTIVARBOT' para comenzar.");
+
+    // 🔊 Saludo en Audio
+    if (texto.includes('HOLA')) {
+        const saludoPath = './audios/saludo_hola.mp3';
+        if (fs.existsSync(saludoPath)) {
+            const saludoAudio = MessageMedia.fromFilePath(saludoPath);
+            await client.sendMessage(message.from, saludoAudio, { sendAudioAsVoice: true });
+        } else {
+            message.reply("🎧 Lo siento, pero el audio de saludo no está disponible en este momento.");
+        }
+        return;
+    }
 
     // Configuración de Modo
     if (texto.includes('CONFIGURAR MODO')) {
@@ -110,7 +117,7 @@ Escribe: *CONFIGURAR MODO [BASICO/PRO/LEGENDARIO]* y *CONFIGURAR TONO [FRIENDLY/
     // Respuestas Generales
     if (texto.includes('PRECIO')) {
         message.reply('El precio de LA PLENTY KIT es $90.000 COP e incluye envío gratis. 🚀💜');
-    } else if (texto.includes('INFORMACIÓN')) {
+    } else if (texto.includes('INFORMACION') || texto.includes('INFORMACIÓN')) {
         const botones = new Buttons(
             '¿Quieres más información detallada o cómo adquirirlo?',
             [

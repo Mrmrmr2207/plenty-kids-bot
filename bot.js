@@ -25,14 +25,15 @@ const client = new Client({
         ],
         executablePath: require('puppeteer').executablePath()
     },
-    authStrategy: new LocalAuth({ dataPath: process.env.SESSION_PATH || './session' }) // Sesión persistente
+    authStrategy: new LocalAuth({ dataPath: process.env.SESSION_PATH || './session' })
 });
 
 console.log('✅ Puppeteer configurado correctamente.');
 
-// Configuración por defecto
-const modo = 'PRO';         // Establece el modo por defecto
-const tono = 'FRIENDLY';    // Establece el tono por defecto
+// Variables de estado
+let configurado = false;
+let modo = "BASICO";
+let tono = "FRIENDLY";
 
 // QR Code
 client.on('qr', qr => {
@@ -42,12 +43,8 @@ client.on('qr', qr => {
 
 // Conexión Exitosa
 client.on('ready', async () => {
-    console.log(`✅ 💬 ¡Bot conectado en modo PRO y tono FRIENDLY por defecto!`);
-
-    const phoneNumber = process.env.PHONE_NUMBER;
-    if (phoneNumber) {
-        await client.sendMessage(phoneNumber, `✅ ¡El BOT ha sido ENCENDIDO en modo PRO y tono FRIENDLY por defecto!`);
-    }
+    console.log(`🟡 Variable de entorno 'MODE': ${modo}`);
+    console.log(`✅ 🦆 ¡Bot conectado en modo ${modo}!`);
 });
 
 // Manejo de Mensajes
@@ -56,11 +53,57 @@ client.on('message', async (message) => {
         return message.reply('⚠️ El bot está en mantenimiento temporalmente. Vuelve pronto. 🚧');
     }
 
-    const texto = message.body.toLowerCase();
+    const texto = message.body.toUpperCase();
 
-    if (texto.includes('precio')) {
+    // Activación del Bot
+    if (texto.includes('ACTIVARBOT')) {
+        configurado = true;
+        await message.reply(`🎯 Hola, gracias por activar el bot. Ahora puedes configurar:
+
+🟠 *Modo:*
+ - BASICO: Respuestas generales.
+ - PRO: Mensajes más amplios e informativos.
+ - LEGENDARIO: Respuestas motivadoras y llenas de energía.
+
+🟢 *Tono:*
+ - FRIENDLY: Cercano y cálido.
+ - PROFESSIONAL: Serio y directo.
+ - EMOTIONAL: Con un toque sentimental.
+
+Escribe: *CONFIGURAR MODO [BASICO/PRO/LEGENDARIO]* y *CONFIGURAR TONO [FRIENDLY/PROFESSIONAL/EMOTIONAL]*`);
+        return;
+    }
+
+    if (!configurado) return message.reply("🔒 El bot está bloqueado. Usa la palabra de seguridad 'ACTIVARBOT' para comenzar.");
+
+    // Configuración de Modo
+    if (texto.includes('CONFIGURAR MODO')) {
+        const nuevoModo = texto.split('CONFIGURAR MODO ')[1];
+        if (['BASICO', 'PRO', 'LEGENDARIO'].includes(nuevoModo)) {
+            modo = nuevoModo;
+            await message.reply(`✅ Modo configurado exitosamente a: *${modo}*`);
+        } else {
+            await message.reply('❌ Modo no reconocido. Usa BASICO, PRO o LEGENDARIO.');
+        }
+        return;
+    }
+
+    // Configuración de Tono
+    if (texto.includes('CONFIGURAR TONO')) {
+        const nuevoTono = texto.split('CONFIGURAR TONO ')[1];
+        if (['FRIENDLY', 'PROFESSIONAL', 'EMOTIONAL'].includes(nuevoTono)) {
+            tono = nuevoTono;
+            await message.reply(`✅ Tono configurado exitosamente a: *${tono}*`);
+        } else {
+            await message.reply('❌ Tono no reconocido. Usa FRIENDLY, PROFESSIONAL o EMOTIONAL.');
+        }
+        return;
+    }
+
+    // Respuestas Generales
+    if (texto.includes('PRECIO')) {
         message.reply('El precio de LA PLENTY KIT es $90.000 COP e incluye envío gratis. 🚀💜');
-    } else if (texto.includes('información')) {
+    } else if (texto.includes('INFORMACIÓN')) {
         const botones = new Buttons(
             '¿Quieres más información detallada o cómo adquirirlo?',
             [
@@ -72,10 +115,8 @@ client.on('message', async (message) => {
             'Elige una opción:'
         );
         await message.reply(botones);
-    } else if (texto.includes('comprar') || texto.includes('adquirir')) {
+    } else if (texto.includes('COMPRAR') || texto.includes('ADQUIRIR')) {
         message.reply('Puedes adquirir tu PLENTY KIT visitando el sitio web: cursos.goplenty.net 🌐');
-    } else if (texto.includes('humano')) {
-        message.reply('Ahora te voy a transferir con un humano para que te ayude mejor. Tranquilo, esta persona sabe todo lo que necesitas saber. 😎');
     } else {
         message.reply('¿En qué más puedo ayudarte? 😊');
     }

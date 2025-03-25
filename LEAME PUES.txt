@@ -84,23 +84,25 @@ ERRORES COMUNES
 ---------------------------------------
 
 OJO Siempre que se elimine una sesión de whatsapp sin apagar el bot se debe 
+1. Push en GitHub 
 
-Copia y pega en powershell:
-
-Remove-Item -Path .wwebjs_cache -Recurse -Force
-Remove-Item -Path session -Recurse -Force
-
-DEspues, push en GitHub 
 
 git add .
 git commit -m "Configuración mejorada de modo, tono y seguridad"
 git push
 
-Ahora deploy en railway y por ultimo solicitar el QR nuevamente.
+2. Ahora deploy en railway
+
+3. Copia y pega en powershell:
+
+Remove-Item -Path .wwebjs_cache -Recurse -Force
+Remove-Item -Path session -Recurse -Force
+
+4. Por ultimo solicitar el QR nuevamente.
 
 Porque sino tira error
 
-Luego, en powershell para extraer el QR
+5.Luego, en powershell para extraer el QR
 
 Copia y pega:
 
